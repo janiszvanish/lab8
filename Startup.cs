@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using lab8.Models.Entities;
+using lab8.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -31,6 +32,7 @@ namespace lab8
             services.AddDbContext<APBDDbContext>(opt => {
                 opt.UseSqlServer("Data Source=localhost,1433;DataBase=APBD; User ID=sa; Password=zaq1@WSX");
             });
+            services.AddScoped<IDoctorService, DoctorService>();
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
