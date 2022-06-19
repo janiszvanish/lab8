@@ -11,7 +11,10 @@ namespace lab8.Services
     public class DoctorService : IDoctorService
     {
         private readonly APBDDbContext _context;
-        
+        public DoctorService(APBDDbContext context){
+            _context = context;
+        }
+
         public async Task<bool> AddDoctorAsync(DoctorPost post)
         {
             if(post is null)
@@ -40,12 +43,11 @@ namespace lab8.Services
 
         public async Task<bool> DeleteDoctorAsync(int id)
         {
-            var d = await CheckIfDoctorExistAsync(id);
+            var d = await _context.Doctors.Where(e => e.IdDoctor == id).FirstOrDefaultAsync();
             if(d is null)
                 return false;
             
-            var entry = _context.Entry(d);
-            entry.State = EntityState.Deleted;
+            _context.Remove(d);
             await _context.SaveChangesAsync();
             
             return true;
@@ -53,22 +55,20 @@ namespace lab8.Services
 
         public async Task<bool> EditDoctorAsync(int id, DoctorPut put)
         {
-            var d = await CheckIfDoctorExistAsync(id);
-            if(d is null)
+            var doctor = await _context.Doctors.Where(e => e.IdDoctor == id).FirstOrDefaultAsync();
+            if(doctor is null)
                 return false;
 
-            var entry = _context.Entry(d);
-
             if(!(put.Email is null))
-                d.Email = put.Email;
+                doctor.Email = put.Email;
 
             if(!(put.FirstName is null))
-                d.FirstName = put.FirstName;
+                doctor.FirstName = put.FirstName;
             
             if(!(put.LastName is null))
-                d.LastName = put.LastName;
+                doctor.LastName = put.LastName;
+
             
-            entry.State = EntityState.Modified;
             await _context.SaveChangesAsync();
 
             return true;

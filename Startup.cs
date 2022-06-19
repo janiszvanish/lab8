@@ -33,6 +33,7 @@ namespace lab8
                 opt.UseSqlServer("Data Source=localhost,1433;DataBase=APBD; User ID=sa; Password=zaq1@WSX");
             });
             services.AddScoped<IDoctorService, DoctorService>();
+            services.AddScoped<IPrescriptionService, PrescriptionService>();
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
